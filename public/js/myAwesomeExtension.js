@@ -68,14 +68,36 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
         let line = new THREE.Line(geometry, material2);
         viewer.impl.sceneUpdated(true)
 
-        if (!viewer.overlays.hasScene('custom-scene')) {
-            viewer.overlays.addScene('custom-scene');
+        if (!viewer.overlays.hasScene('devices')) {
+            viewer.overlays.addScene('devices');
+        }
+        if (!viewer.overlays.hasScene('wires')) {
+            viewer.overlays.addScene('wires');
         }
         console.log(cube1, cube2, line);
-        viewer.overlays.addMesh(cube1, 'custom-scene');
-        viewer.overlays.addMesh(cube2, 'custom-scene');
-        viewer.overlays.addMesh(line, 'custom-scene');
+        viewer.overlays.addMesh(cube1, 'devices');
+        viewer.overlays.addMesh(cube2, 'devices');
+        viewer.overlays.addMesh(line, 'wires');
 
+
+        document.getElementById('hider').onclick = function() {
+            //visible = !visible;
+            // console.log(visible);
+            // if (visible){
+            //     viewer.impl.sceneAfter.children.forEach(child=>{child.material.opacity=1}); 
+            // }
+            // else viewer.impl.sceneAfter.children.forEach(child=>{child.material.opacity=0}); 
+            // viewer.impl.sceneAfter.add(line);
+            // viewer.impl.sceneUpdated(true);
+            viewer.impl.overlayScenes["wires"].scene.children.forEach(child=>{
+                if(child.material.opacity==1)
+                {
+                    child.material.opacity=0;
+                }
+                else child.material.opacity=1;
+                viewer.impl.sceneUpdated(true)
+            })
+        }
 
         this._button.onClick = (ev) => {
             const selection = this.viewer.getSelection();

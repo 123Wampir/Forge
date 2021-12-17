@@ -9,7 +9,7 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
         super(viewer, options)
 
         this.viewer = viewer
-        this.onclick= function(event){
+        this.onclick = function (event) {
 
         }
     }
@@ -100,21 +100,18 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
 
 
 
-    
+
     handleSingleClick(event) {
 
-        console.log("here")
-        const pointer = event.pointers ? event.pointers[0]: event
-        
+        const pointer = event.pointers ? event.pointers[0] : event
+
         const rayCaster = this.pointerToRaycaster(
             this.viewer.impl.canvas,
             this.viewer.impl.camera,
             pointer)
-            console.log("here")
-            
+
         const intersectResults = rayCaster.intersectObjects(
-            this.viewer.impl.overlayScenes["custom-scene"].scene.children, true)
-            console.log(rayCaster)
+            this.viewer.impl.overlayScenes["devices"].scene.children, true)
         const hitTest = this.viewer.model.rayIntersect(
             rayCaster, true, this.dbIds)
 
@@ -123,25 +120,25 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
             (!hitTest || (hitTest.distance > res.distance))
         )
         if (selections.length != 0) {
-            
+
             console.log('Custom meshes selected:')
-            selections[0].object.userData = selections[0].object.material.color
+            if (Object.keys(selections[0].object.userData).length == 0)
+                selections[0].object.userData = selections[0].object.material.color
             selections[0].object.material.color = new THREE.Color("skyblue")
             //this.controls.attach(selections[0].object)
             console.log(selections)
             this.viewer.impl.sceneUpdated(true)
-            
+
             return true
         }
         else {
-            this.viewer.impl.scene.children.forEach(child => {
+            this.viewer.impl.overlayScenes["devices"].scene.children.forEach(child => {
                 if (Object.keys(child.userData).length != 0)
-                child.material.color = child.userData
+                    child.material.color = child.userData
                 this.controls.detach()
-                this.controls.visible=false;
+                this.controls.visible = false;
             })
             this.viewer.impl.sceneUpdated(true)
-            console.log(this.controls)
             return false
         }
     }
