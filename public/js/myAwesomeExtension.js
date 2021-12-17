@@ -35,15 +35,19 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
 
         //куб у телевизора
         var geom = new THREE.BoxGeometry(300, 300, 50);
-        var material = new THREE.MeshBasicMaterial({ color: 0xff0000,side: THREE.DoubleSide,
-            reflectivity: 0.0});
+        var material = new THREE.MeshBasicMaterial({
+            color: 0xff0000, side: THREE.DoubleSide,
+            reflectivity: 0.0
+        });
         var cube1 = new THREE.Mesh(geom, material);
         cube1.position.set(8500, 3000, -100);
 
         //куб в комнате сверху
         var geom = new THREE.BoxGeometry(300, 300, 50);
-        material = new THREE.MeshBasicMaterial({ color: 0xfff000,side: THREE.DoubleSide,
-            reflectivity: 0.0 });
+        material = new THREE.MeshBasicMaterial({
+            color: 0xfff000, side: THREE.DoubleSide,
+            reflectivity: 0.0
+        });
         var cube2 = new THREE.Mesh(geom, material);
         cube2.position.set(-1000, 3500, 0);
 
@@ -151,6 +155,4 @@ function getAlldbIds(rootId, instanceTree) {
     return alldbId;
 }
 
-
-
-// Autodesk.Viewing.theExtensionManager.registerExtension('MyAwesomeExtension', MyAwesomeExtension);
+Autodesk.Viewing.theExtensionManager.registerExtension('MyAwesomeExtension', MyAwesomeExtension);
