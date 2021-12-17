@@ -35,13 +35,15 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
 
         //куб у телевизора
         var geom = new THREE.BoxGeometry(300, 300, 50);
-        var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        var material = new THREE.MeshBasicMaterial({ color: 0xff0000,side: THREE.DoubleSide,
+            reflectivity: 0.0});
         var cube1 = new THREE.Mesh(geom, material);
         cube1.position.set(8500, 3000, -100);
 
         //куб в комнате сверху
         var geom = new THREE.BoxGeometry(300, 300, 50);
-        material = new THREE.MeshBasicMaterial({ color: 0xfff000 });
+        material = new THREE.MeshBasicMaterial({ color: 0xfff000,side: THREE.DoubleSide,
+            reflectivity: 0.0 });
         var cube2 = new THREE.Mesh(geom, material);
         cube2.position.set(-1000, 3500, 0);
 
@@ -62,14 +64,20 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
         let line = new THREE.Line(geometry, material2);
         //viewer.impl.matman().addMaterial('material', material2, true);
         viewer.impl.sceneAfter.add(line);
+        viewer.impl.sceneAfter.add(cube1);
+        viewer.impl.sceneAfter.add(cube2);
+        // viewer.impl.scene.add(line);
+        // viewer.impl.scene.add(cube1);
+        // viewer.impl.scene.add(cube2);
+        viewer.impl.sceneUpdated(true)
 
-        if (!viewer.overlays.hasScene('custom-scene')) {
+        /*if (!viewer.overlays.hasScene('custom-scene')) {
             viewer.overlays.addScene('custom-scene');
         }
         console.log(cube1, cube2, line);
         viewer.overlays.addMesh(cube1, 'custom-scene');
         viewer.overlays.addMesh(cube2, 'custom-scene');
-        viewer.overlays.addMesh(line, 'custom-scene');
+        viewer.overlays.addMesh(line, 'custom-scene');*/
 
 
         this._button.onClick = (ev) => {
