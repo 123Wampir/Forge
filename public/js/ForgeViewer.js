@@ -1,13 +1,14 @@
 var viewer;
-
-function launchViewer(urn) {
+function launchViewer(/*urn*/) {
+  const urn = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6Y2pmMm9qeHNxaDF4MXZ3ZHM4bGd0dmxwNzV4Z2F6d2QtYnJ1aC9mbG9vcnNfdjIuc3RlcA==';
+  console.log(urn);
   var options = {
     env: 'AutodeskProduction',
     getAccessToken: getForgeToken
   };
 
   Autodesk.Viewing.Initializer(options, () => {
-    viewer = new Autodesk.Viewing.GuiViewer3D(document.getElementById('forgeViewer'), { extensions: [ 'Autodesk.DocumentBrowser',"MyAwesomeExtension"] });
+    viewer = new Autodesk.Viewing.GuiViewer3D(document.getElementById('forgeViewer'), { extensions: ['Autodesk.DocumentBrowser', "MyAwesomeExtension"] });
     viewer.start();
     var documentId = 'urn:' + urn;
     Autodesk.Viewing.Document.load(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
@@ -32,3 +33,4 @@ function getForgeToken(callback) {
     });
   });
 }
+launchViewer();

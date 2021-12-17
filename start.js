@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 
+require('dotenv').config()
 const PORT = process.env.PORT || 3000;
 const config = require('./config');
 if (config.credentials.client_id == null || config.credentials.client_secret == null) {
@@ -18,4 +19,4 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(err.statusCode).json(err);
 });
-app.listen(PORT, () => { console.log(`Server listening on port ${PORT} bruh`); });
+app.listen(PORT, () => { console.log(`Server listening on port http://localhost:${PORT} bruh`); });
