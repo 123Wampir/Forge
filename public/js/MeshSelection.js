@@ -93,6 +93,7 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
         return ray
     }
 
+    
     /////////////////////////////////////////////////////////
     // Click handler
     //
