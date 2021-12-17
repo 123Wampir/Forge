@@ -53,8 +53,8 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
 
         //линия телевизор-комната сверху
         let pts = []
-        pts.push(new THREE.Vector3(-1000, 3500, 0))
-        pts.push(new THREE.Vector3(8500, 3000, 0))
+        pts.push(cube1.position)
+        pts.push(cube2.position)
         //pts.push(new THREE.Vector3(8500, 3000, 1000))
         viewer.impl.sceneAfter.skipDepthTarget = true;
         viewer.impl.sceneAfter.skipIdTarget = true;
@@ -81,14 +81,6 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
 
 
         document.getElementById('hider').onclick = function() {
-            //visible = !visible;
-            // console.log(visible);
-            // if (visible){
-            //     viewer.impl.sceneAfter.children.forEach(child=>{child.material.opacity=1}); 
-            // }
-            // else viewer.impl.sceneAfter.children.forEach(child=>{child.material.opacity=0}); 
-            // viewer.impl.sceneAfter.add(line);
-            // viewer.impl.sceneUpdated(true);
             viewer.impl.overlayScenes["wires"].scene.children.forEach(child=>{
                 if(child.material.opacity==1)
                 {

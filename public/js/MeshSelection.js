@@ -27,7 +27,10 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
 
                 this.dbIds = this.getAllDbIds()
                 this.controls = new THREE.TransformControls(viewer.impl.camera, viewer.impl.canvas, "translate");
-                this.viewer.impl.sceneAfter.add(this.controls)
+                if (!viewer.overlays.hasScene('controls')) {
+                    viewer.overlays.addScene('controls');
+                }
+                this.viewer.impl.overlayScenes["controls"].scene.add(this.controls)
 
             })
 
@@ -125,7 +128,7 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
             if (Object.keys(selections[0].object.userData).length == 0)
                 selections[0].object.userData = selections[0].object.material.color
             selections[0].object.material.color = new THREE.Color("skyblue")
-            //this.controls.attach(selections[0].object)
+            this.controls.attach(selections[0].object)
             console.log(selections)
             this.viewer.impl.sceneUpdated(true)
 
@@ -135,9 +138,8 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
             this.viewer.impl.overlayScenes["devices"].scene.children.forEach(child => {
                 if (Object.keys(child.userData).length != 0)
                     child.material.color = child.userData
+                })
                 this.controls.detach()
-                this.controls.visible = false;
-            })
             this.viewer.impl.sceneUpdated(true)
             return false
         }
