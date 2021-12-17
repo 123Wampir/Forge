@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 
+require('dotenv').config()
 const PORT = process.env.PORT || 3000;
 const config = require('./config');
 if (config.credentials.client_id == null || config.credentials.client_secret == null) {
