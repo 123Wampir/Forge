@@ -153,4 +153,4 @@ function getAlldbIds(rootId, instanceTree) {
 
 
 
-Autodesk.Viewing.theExtensionManager.registerExtension('MyAwesomeExtension', MyAwesomeExtension);
+// Autodesk.Viewing.theExtensionManager.registerExtension('MyAwesomeExtension', MyAwesomeExtension);
