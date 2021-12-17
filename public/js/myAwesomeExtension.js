@@ -62,33 +62,15 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
             color: new THREE.Color(0x0000FF),transparent:true
         });
         let line = new THREE.Line(geometry, material2);
-        //viewer.impl.matman().addMaterial('material', material2, true);
-        viewer.impl.sceneAfter.add(line);
-        viewer.impl.sceneAfter.add(cube1);
-        viewer.impl.sceneAfter.add(cube2);
-        // viewer.impl.scene.add(line);
-        // viewer.impl.scene.add(cube1);
-        // viewer.impl.scene.add(cube2);
         viewer.impl.sceneUpdated(true)
 
-        document.getElementById('hider').onclick = function() {
-            //visible = !visible;
-            // console.log(visible);
-            // if (visible){
-            //     viewer.impl.sceneAfter.children.forEach(child=>{child.material.opacity=1}); 
-            // }
-            // else viewer.impl.sceneAfter.children.forEach(child=>{child.material.opacity=0}); 
-            // viewer.impl.sceneAfter.add(line);
-            // viewer.impl.sceneUpdated(true);
-            viewer.impl.sceneAfter.children.forEach(child=>{
-                if(child.material.opacity==1)
-                {
-                    child.material.opacity=0;
-                }
-                else child.material.opacity=1;
-                viewer.impl.sceneUpdated(true)
-            })
+        if (!viewer.overlays.hasScene('custom-scene')) {
+            viewer.overlays.addScene('custom-scene');
         }
+        console.log(cube1, cube2, line);
+        viewer.overlays.addMesh(cube1, 'custom-scene');
+        viewer.overlays.addMesh(cube2, 'custom-scene');
+        viewer.overlays.addMesh(line, 'custom-scene');
 
 
         this._button.onClick = (ev) => {
