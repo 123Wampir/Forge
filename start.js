@@ -18,4 +18,4 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(err.statusCode).json(err);
 });
-app.listen(PORT, () => { console.log(`Server listening on port ${PORT} bruh`); });
+app.listen(PORT, () => { console.log(`Server listening on port http://localhost:${PORT} bruh`); });

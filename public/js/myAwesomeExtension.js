@@ -33,16 +33,43 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
         // Add a new button to the toolbar group
         this._button = new Autodesk.Viewing.UI.Button('myAwesomeExtensionButton');
 
-
-
-        var geom = new THREE.SphereGeometry(1, 8, 8);
+        //куб у телевизора
+        var geom = new THREE.BoxGeometry(300, 300, 50);
         var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        var sphereMesh = new THREE.Mesh(geom, material);
-        sphereMesh.position.set(1, 2, 3);
+        var cube1 = new THREE.Mesh(geom, material);
+        cube1.position.set(8500, 3000, -100);
+
+        //куб в комнате сверху
+        var geom = new THREE.BoxGeometry(300, 300, 50);
+        material = new THREE.MeshBasicMaterial({ color: 0xfff000 });
+        var cube2 = new THREE.Mesh(geom, material);
+        cube2.position.set(-1000, 3500, 0);
+
+        //линия телевизор-комната сверху
+        let pts = []
+        pts.push(new THREE.Vector3(-1000, 3500, 0))
+        pts.push(new THREE.Vector3(8500, 3000, 0))
+        //pts.push(new THREE.Vector3(8500, 3000, 1000))
+        viewer.impl.sceneAfter.skipDepthTarget = true;
+        viewer.impl.sceneAfter.skipIdTarget = true;
+        let geometry = new THREE.Geometry();
+        pts.forEach(pt => {
+            geometry.vertices.push(pt);
+        })
+        let material2 = new THREE.LineDashedMaterial({
+            color: new THREE.Color(0x0000FF),
+        });
+        let line = new THREE.Line(geometry, material2);
+        //viewer.impl.matman().addMaterial('material', material2, true);
+        viewer.impl.sceneAfter.add(line);
+
         if (!viewer.overlays.hasScene('custom-scene')) {
             viewer.overlays.addScene('custom-scene');
         }
-        viewer.overlays.addMesh(sphereMesh, 'custom-scene');
+        console.log(cube1, cube2, line);
+        viewer.overlays.addMesh(cube1, 'custom-scene');
+        viewer.overlays.addMesh(cube2, 'custom-scene');
+        viewer.overlays.addMesh(line, 'custom-scene');
 
 
         this._button.onClick = (ev) => {
