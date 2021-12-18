@@ -72,7 +72,6 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
         }
         return ray
     }
-    handleSingleClick(event) {
 
     handleSingleClick(event) {
         const pointer = event.pointers ? event.pointers[0] : event
@@ -124,9 +123,9 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
         if (this.panel)
             this.panel.uninitialize();
         delete this.panel;
-
+    }
     handleDoubleClick(event) {
-        this.isDragging=!this.isDragging
+        this.isDragging = !this.isDragging
         if (this.selected == true && this.isDragging == true) {
             this.controls.onPointerDown(event)
         }
