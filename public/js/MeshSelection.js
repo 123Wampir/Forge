@@ -124,7 +124,8 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
         this.panel.resizeToContent();
     }
     hideModal() {
-        this.panel.uninitialize();
+        if (this.panel)
+            this.panel.uninitialize();
         delete this.panel;
 
     }
