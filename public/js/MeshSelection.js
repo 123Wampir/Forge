@@ -1,17 +1,17 @@
 class ModelSummaryPanel extends Autodesk.Viewing.UI.PropertyPanel {
-    constructor(viewer, container, id, title, options, ip, mac, device_type, connect_type) {
-        super(container, id, title, options);
+    constructor(viewer, container, id, title, device) {
+        super(container, id, title);
         this.viewer = viewer;
-        this.addProperty('Title', title);
-        this.addProperty('type', device_type, "properties");
-        this.addProperty('IP', ip, "properties");
-        this.addProperty('MAC', mac, "properties");
-        this.addProperty('type', connect_type, "connect");
-        this.closer.addEventListener('click', this.closeModal);
+        // this.addProperty('Title', title);
+        this.addProperty('Тип устройства', device.type);
+        this.addProperty('IP', device.ip);
+        this.addProperty('MAC', device.mac);
+        this.addProperty('Кол-во портов', device.ports);
+        // this.closer.addEventListener('click', () => this.closeModal());
     }
-    closeModal() {
-        this.uninitialize();
-    }
+    // closeModal() {
+    //     this.uninitialize();
+    // }
 }
 
 class MeshSelectionExtension extends Autodesk.Viewing.Extension {
@@ -84,13 +84,12 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
             if (Object.keys(selections[0].object.userData).length == 0)
                 selections[0].object.userData = selections[0].object.material.color
             selections[0].object.material.color = new THREE.Color("skyblue")
-            this.controls.attach(selections[0].object)
-            console.log(selections)
+            this.controls.attach(selections[0].object);
             if (this.panel && selections[0].object.deviceInfo._id !== this.panel.container.id) {
                 this.hideModal()
-                this.showModal(selections[0].object.deviceInfo);
+                this.showModal(selections[0].object.deviceInfo, event.x, event.y);
             } else if (!this.panel) {
-                this.showModal(selections[0].object.deviceInfo);
+                this.showModal(selections[0].object.deviceInfo, event.x, event.y);
             }
             this.viewer.impl.sceneUpdated(true)
             return true
@@ -107,21 +106,17 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
             return false
         }
     }
-    showModal(deviceInfo) {
-        console.log(deviceInfo.name);
+    showModal(deviceInfo, x, y) {
         this.panel = new ModelSummaryPanel(
             this.viewer,
             this.viewer.container,
             deviceInfo._id,
             deviceInfo.name,
-            {},
-            deviceInfo.ip,
-            deviceInfo.mac,
-            deviceInfo.type,
-            deviceInfo.ports
-        );
+            deviceInfo);
         this.panel.setVisible(true);
         this.panel.resizeToContent();
+        this.panel.container.style.top = `${y}px`;
+        this.panel.container.style.left = `${x}px`;
     }
     hideModal() {
         if (this.panel)
