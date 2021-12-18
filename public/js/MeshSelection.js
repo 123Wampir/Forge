@@ -31,14 +31,16 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
                     viewer.overlays.addScene('controls');
                 }
                 this.viewer.impl.overlayScenes["controls"].scene.add(this.controls)
+                this.isDragging = false;
 
             })
 
+        this.viewer.toolController.getPriority = function () {
+            return 1000
+        }
         this.viewer.toolController.registerTool(this)
-
         this.viewer.toolController.activateTool(
             'Viewing.Extension.MeshSelection')
-
 
         return true
     }
@@ -47,8 +49,9 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
         return ['Viewing.Extension.MeshSelection']
     }
 
-    activate() {
-
+    activate = function () {
+        console.log("ACTIVATED")
+        return true
     }
 
     deactivate() {
@@ -100,11 +103,8 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
 
         return ray
     }
-
-
-
-
     handleSingleClick(event) {
+
 
         const pointer = event.pointers ? event.pointers[0] : event
 
@@ -130,6 +130,7 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
             selections[0].object.material.color = new THREE.Color("skyblue")
             this.controls.attach(selections[0].object)
             console.log(selections)
+            this.selected = true
             this.viewer.impl.sceneUpdated(true)
 
             return true
@@ -138,12 +139,52 @@ class MeshSelectionExtension extends Autodesk.Viewing.Extension {
             this.viewer.impl.overlayScenes["devices"].scene.children.forEach(child => {
                 if (Object.keys(child.userData).length != 0)
                     child.material.color = child.userData
-                })
-                this.controls.detach()
+            })
+            this.controls.detach()
             this.viewer.impl.sceneUpdated(true)
             return false
         }
     }
+
+    handleDoubleClick(event) {
+        this.isDragging=!this.isDragging
+        if (this.selected == true && this.isDragging == true) {
+            this.controls.onPointerDown(event)
+        }
+        console.log(this.isDragging)
+        if (this.isDragging == false) {
+            if (this.controls.onPointerUp(event)) {
+                console.log(this.controls.position)
+                //this.controls.detach()
+                this.viewer.impl.sceneUpdated(true)
+            }
+            console.log(this.controls)
+            //this.controls.children[0].position=this.controls.position
+        }
+    }
+    handleMouseMove = function (event) {
+        if (this.isDragging && this.selected) {
+            if (this.controls.onPointerMove(event)) {
+                //console.log(this.controls.isDragging())
+                //let point = this.viewer.impl.clientToWorld(event.clientX, event.clientY, false).point
+                //this.controls.position.set(point.x, point.y, point.z)
+                this.controls.setMode('translate')
+                this.viewer.impl.sceneUpdated(true)
+                return true;
+            }
+
+            return false;
+        }
+
+        /*if (this.controls.onPointerHover(event)) {
+            console.log("HOVER")
+            return true;
+        }*/
+
+        //return _transRotControl.onPointerHover(event);
+        return false;
+    };
+
 
     getAllDbIds() {
 

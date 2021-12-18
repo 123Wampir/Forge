@@ -63,7 +63,7 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
             geometry.vertices.push(pt);
         })
         let material2 = new THREE.LineDashedMaterial({
-            color: new THREE.Color(0x0000FF),transparent:true
+            color: new THREE.Color(0x0000FF), transparent: true
         });
         let line = new THREE.Line(geometry, material2);
         viewer.impl.sceneUpdated(true)
@@ -80,13 +80,33 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
         viewer.overlays.addMesh(line, 'wires');
 
 
-        document.getElementById('hider').onclick = function() {
-            viewer.impl.overlayScenes["wires"].scene.children.forEach(child=>{
-                if(child.material.opacity==1)
-                {
-                    child.material.opacity=0;
+        document.getElementById('hider').onclick = function () {
+            viewer.impl.overlayScenes["wires"].scene.children.forEach(child => {
+                if (child.material.opacity == 1) {
+                    child.material.opacity = 0;
                 }
-                else child.material.opacity=1;
+                else child.material.opacity = 1;
+                viewer.impl.sceneUpdated(true)
+            })
+        }
+        document.getElementById('createConnection').onclick = function () {
+            viewer.impl.overlayScenes["wires"].scene.children.forEach(child => {
+                console.log(child)
+                let pts = child.geometry.vertices.slice(0);
+                let pt = new THREE.Vector3(pts[0].x + pts[1].x, pts[0].y + pts[1].y, pts[0].z + pts[1].z)
+                pt = pt.divideScalar(2)
+                pts.splice(1, 0, pt)    
+                console.log(pts)
+                let geom = new THREE.Geometry();
+                pts.forEach(pt => {
+                    geom.vertices.push(pt);
+                })
+                let ln = new THREE.Line(geom, material2)
+                viewer.overlays.removeMesh(child, 'wires');
+                viewer.overlays.addMesh(ln, 'wires');
+                child = ln
+                console.log(ln)
+                console.log(child.geometry.vertices)
                 viewer.impl.sceneUpdated(true)
             })
         }
