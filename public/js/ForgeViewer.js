@@ -12,7 +12,6 @@ function launchViewer(/*urn*/) {
         'Autodesk.DocumentBrowser',
         "MyAwesomeExtension",
         "MeshSelectionExtension",
-        "PanelExtension",
         "DeviceExtension"]
     });
     viewer.start();
