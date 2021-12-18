@@ -1,3 +1,15 @@
+class CreateModal extends Autodesk.Viewing.UI.PropertyPanel {
+    constructor(viewer, container, id, title, options) {
+        super(container, id, title, options);
+        this.viewer = viewer;
+        /*this.addProperty('Title', title);
+        this.addProperty('type', device_type, "properties");
+        this.addProperty('IP', ip, "properties");
+        this.addProperty('MAC', mac, "properties");
+        this.addProperty('type', connect_type, "connect");*/
+    }
+}
+
 class DeviceExtension extends Autodesk.Viewing.Extension {
     constructor(viewer, options) {
         super(viewer, options);
