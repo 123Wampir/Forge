@@ -33,8 +33,12 @@ async function selectDevice(e) {
  */
 async function createList(listElem) {
 	const devices = await getDevices();
-	const div = document.createElement('div');
-	div.classList.add('list-group');
+	const div_r = document.createElement('div');
+	div_r.innerHTML = "<h3>Routers:</h3>";
+	const div_d = document.createElement('div');
+	div_d.innerHTML = "<h3>Devices:</h3>";
+	div_r.classList.add('list-group');
+	div_d.classList.add('list-group');
 	devices.forEach(d => {
 		const a = document.createElement('a');
 		a.textContent = d.name;
@@ -42,7 +46,9 @@ async function createList(listElem) {
 		a.addEventListener('click', selectDevice)
 		a.id = d._id;
 
-		div.appendChild(a);
+		if (d.type == 'router') div_r.appendChild(a)
+		else div_d.appendChild(a);
 	});
-	listElem.appendChild(div);
+	listElem.appendChild(div_d);
+	listElem.appendChild(div_r);
 }
