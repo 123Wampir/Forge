@@ -21,6 +21,11 @@ class CreateModal extends Autodesk.Viewing.UI.DockingPanel {
         this.createContainer(div);
         this.container.appendChild(div);
 
+        this.detect = document.createElement("button");
+        this.detect.classList.add("btn", "btn-info");
+        this.detect.textContent = "Определить место";
+        this.container.appendChild(this.detect);
+
         this.add = document.createElement("button");
         this.add.classList.add("btn", "btn-success");
         this.add.textContent = "Добавить";
@@ -80,6 +85,14 @@ class CreateModal extends Autodesk.Viewing.UI.DockingPanel {
         groupDiv.style.flexDirection = 'column';
         return groupDiv;
     }
+    getPosition(x, y, z) {
+        const xInput = document.getElementById('x');
+        const yInput = document.getElementById('y');
+        const zInput = document.getElementById('z');
+        xInput.value = Math.floor(x);
+        yInput.value = Math.floor(y);
+        zInput.value = Math.floor(z);
+    }
 }
 
 class DeviceExtension extends Autodesk.Viewing.Extension {
@@ -126,30 +139,12 @@ class DeviceExtension extends Autodesk.Viewing.Extension {
         // Add a new button to the toolbar group
         this._button = new Autodesk.Viewing.UI.Button('DeviceExtensionButton');
         this._button.onClick = (ev) => {
-            // var Add = document.createElement("button");
-            // Add.innerText = "Добавить"
-            // var name = document.createElement("input");
-            // var type = document.createElement("input");
-            // var IP = document.createElement("input");
-            // var MAC = document.createElement("input");
-            // var Intefaces = document.createElement("input");
-            // var X = document.createElement("input");
-            // var Y = document.createElement("input");
-            // var Z = document.createElement("input");
             this.panel = new CreateModal(this.viewer, this.viewer.container, 'create', 'Add Device', { localizeTitle: true, addFooter: false });
-            console.log(this.panel);
-            // this.panel.addProperty('Имя', 'name.outerHTML', "Главное");
-            // this.panel.addProperty('Тип', type.outerHTML, "Главное");
-            // this.panel.addProperty('IP', IP.outerHTML, "Характеристики");
-            // this.panel.addProperty('MAC', MAC.outerHTML, "Характеристики");
-            // this.panel.addProperty('Intefaces', Intefaces.outerHTML, "Характеристики");
-            // this.panel.addProperty('X', X.outerHTML, "Расположение")
-            // this.panel.addProperty('Y', Y.outerHTML, "Расположение")
-            // this.panel.addProperty('Z', Z.outerHTML, "Расположение")
-            // this.panel.addProperty('Добавить', Add.outerHTML, "Добавить")
             this.panel.setVisible(true);
             this.panel.resizeToContent();
-            // console.log(this.panel)
+            this.panel.detect.addEventListener('click', () => {
+                this.ChoosePos = true;
+            })
         };
         this._button.setToolTip('DeviceExtension');
         this._button.addClass('DeviceExtensionIcon');
@@ -158,23 +153,33 @@ class DeviceExtension extends Autodesk.Viewing.Extension {
     }
     handleSingleClick(event) {
         // If left button is clicked and we're currently in the "height drawing" state
-        if (true) {
+        if (this.ChoosePos) {
             let hz = this.viewer.impl.clientToWorld(event.clientX, event.clientY, false);
             if (hz != null) {
                 var offset = viewer.model.getData().globalOffset
                 let point = hz.intersectPoint
                 point.y = point.y - offset.y
-                this.panel.X.innerText = point.x;
-                this.panel.Y.innerText = point.y;
-                this.panel.Z.innerText = point.z;
-                console.log(this.panel.X.innerText)
-                console.log(this.panel.Y.innerText)
-                console.log(this.panel.Z.innerText)
+                this.panel.getPosition(point.x, point.y, point.z);
                 //Создать геометрию роутера
                 //Добавить данные в бд
                 //Поставить его через метод ниже
-                this.viewer.impl.overlayScenes["devices"].scene.children[0].position.set(point.x, point.y, point.z)
-                this.viewer.impl.invalidate(true, true, true);
+                // this.viewer.impl.overlayScenes["devices"].scene.children[0].position.set(point.x, point.y, point.z)
+                const isHas = this.viewer.impl.overlayScenes["devices"].scene.children.find(c => c.test === true);
+                if (isHas) {
+                    isHas.position.set(point.x, point.y, point.z);
+                    this.viewer.impl.invalidate(true, true, true);
+                } else {
+                    const geom = new THREE.BoxGeometry(300, 300, 50);
+                    const color = 0xff0000;
+                    const material = new THREE.MeshBasicMaterial({
+                        color: color, side: THREE.DoubleSide,
+                        reflectivity: 0.0
+                    });
+                    const cube = new THREE.Mesh(geom, material);
+                    cube.position.set(point.x, point.y, point.z);
+                    cube.test = true;
+                    viewer.overlays.addMesh(cube, 'devices');
+                }
                 this.ChoosePos = false
                 return true;
             }

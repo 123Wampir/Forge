@@ -81,7 +81,7 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
                 let pts = child.geometry.vertices.slice(0);
                 let pt = new THREE.Vector3(pts[0].x + pts[1].x, pts[0].y + pts[1].y, pts[0].z + pts[1].z)
                 pt = pt.divideScalar(2)
-                pts.splice(1, 0, pt)    
+                pts.splice(1, 0, pt)
                 console.log(pts)
                 let geom = new THREE.Geometry();
                 pts.forEach(pt => {
@@ -96,55 +96,6 @@ class MyAwesomeExtension extends Autodesk.Viewing.Extension {
                 viewer.impl.sceneUpdated(true)
             })
         }
-
-        this._button.onClick = (ev) => {
-            const selection = this.viewer.getSelection();
-            this.viewer.clearSelection();
-
-            var instanceTree = viewer.model.getData().instanceTree;
-            var rootId = this.rootId = instanceTree.getRootId();
-            var dbIds = getAlldbIds(rootId, instanceTree)
-            dbIds.forEach(id => {
-                this.viewer.getProperties(id, (props) => {
-                    console.log(props.name)
-                    let Name = props.name
-                    Name += "";
-                    if (Name.search("Bed") != -1) {
-                        this.viewer.setThemingColor(id, new THREE.Vector4(1, 1, 0, 0.5))
-                        this.viewer.getProperties(id, console.log, console.error)
-                        console.log("bruh")
-
-                    }
-                }, console.error)
-            })
-            // Anything selected?
-            if (selection.length > 0) {
-                let isolated = [];
-                // Iterate through the list of selected dbIds
-                selection.forEach((dbId) => {
-                    // Get properties of each dbId
-                    this.viewer.getProperties(dbId, (props) => {
-                        // Output properties to console
-                        console.log(props);
-                        console.log(this.viewer);
-
-                        // Ask if want to isolate
-                        // if (confirm(`Isolate ${props.name} (${props.externalId})?`)) 
-                        {
-                            this.viewer.setThemingColor(dbId, new THREE.Vector3(1, 0, 0))
-                            isolated.push(dbId);
-                            this.viewer.isolate(isolated);
-                        }
-                    });
-                });
-            } else {
-                // If nothing selected, restore
-                this.viewer.isolate(0);
-            }
-        };
-        this._button.setToolTip('My Awesome Extension');
-        this._button.addClass('myAwesomeExtensionIcon');
-        this._group.addControl(this._button);
     }
 }
 
