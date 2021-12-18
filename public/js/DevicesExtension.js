@@ -17,9 +17,9 @@ class CreateModal extends Autodesk.Viewing.UI.DockingPanel {
         this.title.style.padding = '6px';
         this.container.appendChild(this.title);
 
-        const div = document.createElement('div');
-        this.createContainer(div);
-        this.container.appendChild(div);
+        const form = document.createElement('form');
+        this.createContainer(form);
+        this.container.appendChild(form);
 
         this.detect = document.createElement("button");
         this.detect.classList.add("btn", "btn-info");
@@ -28,6 +28,22 @@ class CreateModal extends Autodesk.Viewing.UI.DockingPanel {
 
         this.add = document.createElement("button");
         this.add.classList.add("btn", "btn-success");
+        this.add.addEventListener('click', async () => {
+            const device = {
+                name: form.name.value,
+                ip: form.ip.value,
+                mac: form.mac.value,
+                position: {
+                    x: form.x.value,
+                    y: form.y.value,
+                    z: form.z.value
+                }
+            }
+            const responce = await fetch('/api/v1/devices', {
+                method: 'POST',
+                body: JSON.stringify(device)
+            });
+        })
         this.add.textContent = "Добавить";
         this.initializeCloseHandler(this.add);
         this.container.appendChild(this.add);
